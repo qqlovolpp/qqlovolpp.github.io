@@ -243,8 +243,8 @@ function loop() {
 	// lighter creates bright highlight points as the fireworks and particles overlap each other
 	ctx.globalCompositeOperation = 'lighter';
 	
-    var text = "闫佳怡，\n生日快乐";  
-  ctx.font = "40px sans-serif";
+    var text = "闫佳怡，生日快乐鸭!";  
+  ctx.font = "100px sans-serif";
   var textData = ctx.measureText(text);
   ctx.fillStyle = "rgba("+parseInt(random(0,255))+","+parseInt(random(0,255))+","+parseInt(random(0,255))+",0.3)";
   ctx.fillText(text,cw /2-textData.width/2,ch/2); 

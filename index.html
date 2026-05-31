@@ -2,485 +2,579 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS | 个人博客</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.6/index.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --bg-dark: #0a0a0f;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>林予白 · 手记</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/noto-serif-sc@latest/chinese-simplified-400-normal.woff2" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.0.0/chinese-simplified.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.0/chinese-simplified.css" />
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --bg-alt: #ede7dc;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-mute: #8a857d;
+    --accent: #c65d3d;
+    --line: #d9d2c5;
+    --card: #ffffff;
+  }
+  [data-theme="dark"] {
+    --bg: #17150f;
+    --bg-alt: #1f1c16;
+    --ink: #ede7dc;
+    --ink-soft: #b8b0a2;
+    --ink-mute: #7a7263;
+    --accent: #e07a5f;
+    --line: #2e2a22;
+    --card: #1f1c16;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    transition: background .4s ease, color .4s ease;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .serif {
+    font-family: 'Noto Serif SC', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.25rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(245, 241, 234, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: all .3s ease;
+  }
+  [data-theme="dark"] nav { background: rgba(23, 21, 15, 0.72); }
+  nav.scrolled { border-bottom-color: var(--line); }
+  .logo {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.25rem;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .nav-menu { display: flex; gap: 2.2rem; align-items: center; }
+  .nav-menu a {
+    color: var(--ink-soft); text-decoration: none; font-size: .92rem;
+    position: relative; transition: color .2s;
+  }
+  .nav-menu a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--accent); transition: width .3s;
+  }
+  .nav-menu a:hover { color: var(--ink); }
+  .nav-menu a:hover::after { width: 100%; }
+  .nav-actions { display: flex; gap: .6rem; align-items: center; }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid var(--line); background: transparent;
+    cursor: pointer; color: var(--ink); display: flex;
+    align-items: center; justify-content: center;
+    transition: all .25s;
+  }
+  .icon-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .icon-btn svg { width: 16px; height: 16px; }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+  /* HERO */
+  .hero {
+    min-height: 100vh; padding: 10rem 2.5rem 5rem;
+    display: flex; flex-direction: column; justify-content: center;
+    max-width: 1200px; margin: 0 auto; position: relative;
+  }
+  .hero-tag {
+    font-size: .85rem; color: var(--ink-mute); letter-spacing: .3em;
+    text-transform: uppercase; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--ink-mute); }
+  .hero h1 {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.05; margin-bottom: 2rem;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--accent);
+    font-family: 'Noto Serif SC', serif;
+  }
+  .hero p {
+    font-size: 1.15rem; color: var(--ink-soft);
+    max-width: 540px; margin-bottom: 3rem;
+  }
+  .hero-stats {
+    display: flex; gap: 3.5rem; padding-top: 3rem;
+    border-top: 1px solid var(--line);
+  }
+  .stat-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.2rem; display: block;
+  }
+  .stat-label {
+    font-size: .8rem; color: var(--ink-mute); letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 2rem; right: 2.5rem;
+    font-size: .75rem; color: var(--ink-mute);
+    letter-spacing: .2em; writing-mode: vertical-rl;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .scroll-hint::after {
+    content: ''; width: 1px; height: 50px; background: var(--ink-mute);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleY(0.3); transform-origin: top; }
+    50% { transform: scaleY(1); }
+  }
 
-        /* 背景网格动画 */
-        .cyber-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) scale(2);
-            opacity: 0.1;
-            z-index: -1;
-            animation: gridMove 20s linear infinite;
-            pointer-events: none;
-        }
+  /* SECTION HEADER */
+  section { padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto; }
+  .sec-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;
+  }
+  .sec-title {
+    font-size: 2.5rem; line-height: 1;
+  }
+  .sec-title span { color: var(--accent); font-style: italic; }
+  .sec-sub { font-size: .9rem; color: var(--ink-mute); letter-spacing: .1em; }
+  .search-box {
+    display: flex; align-items: center; gap: .8rem;
+    padding: .7rem 1.2rem; border: 1px solid var(--line);
+    border-radius: 100px; background: var(--card);
+    min-width: 260px; transition: all .25s;
+  }
+  .search-box:focus-within { border-color: var(--accent); }
+  .search-box input {
+    background: transparent; border: none; outline: none;
+    color: var(--ink); font-family: inherit; flex: 1; font-size: .9rem;
+  }
+  .search-box svg { width: 15px; height: 15px; color: var(--ink-mute); }
 
-        @keyframes gridMove {
-            0% { transform: perspective(500px) rotateX(60deg) translateY(0) scale(2); }
-            100% { transform: perspective(500px) rotateX(60deg) translateY(50px) scale(2); }
-        }
+  /* FEATURED */
+  .featured {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem;
+    align-items: center; padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto;
+  }
+  .featured-img {
+    aspect-ratio: 4/5; overflow: hidden; border-radius: 4px;
+    position: relative;
+  }
+  .featured-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+  .featured-img:hover img { transform: scale(1.05); }
+  .featured-badge {
+    display: inline-block; font-size: .75rem; letter-spacing: .3em;
+    color: var(--accent); margin-bottom: 1.5rem; text-transform: uppercase;
+  }
+  .featured h2 {
+    font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem;
+  }
+  .featured-meta {
+    display: flex; gap: 2rem; color: var(--ink-mute);
+    font-size: .85rem; margin-bottom: 1.8rem;
+  }
+  .featured-desc {
+    color: var(--ink-soft); margin-bottom: 2.5rem; font-size: 1rem;
+  }
+  .read-more {
+    display: inline-flex; align-items: center; gap: .8rem;
+    color: var(--ink); text-decoration: none; font-size: .9rem;
+    padding-bottom: .4rem; border-bottom: 1px solid var(--ink);
+    transition: gap .3s;
+  }
+  .read-more:hover { gap: 1.4rem; color: var(--accent); border-color: var(--accent); }
 
-        /* 发光效果 */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-        }
+  /* POSTS GRID */
+  .posts {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+  .post {
+    cursor: pointer; transition: transform .4s ease;
+    opacity: 0; transform: translateY(30px);
+  }
+  .post.show { opacity: 1; transform: translateY(0); }
+  .post-img {
+    aspect-ratio: 4/3; overflow: hidden; border-radius: 4px;
+    margin-bottom: 1.5rem; background: var(--bg-alt);
+  }
+  .post-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .8s ease, filter .4s;
+    filter: saturate(0.9);
+  }
+  .post:hover .post-img img { transform: scale(1.08); filter: saturate(1); }
+  .post-cat {
+    font-size: .72rem; letter-spacing: .25em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: .8rem;
+  }
+  .post h3 {
+    font-size: 1.4rem; line-height: 1.3; margin-bottom: .8rem;
+    transition: color .3s;
+  }
+  .post:hover h3 { color: var(--accent); }
+  .post-meta {
+    display: flex; gap: 1.5rem; color: var(--ink-mute);
+    font-size: .8rem;
+  }
 
-        .card-hover:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
-            transform: translateY(-5px);
-        }
+  /* ABOUT */
+  .about {
+    background: var(--bg-alt); margin: 0;
+    max-width: 100%; padding: 7rem 2.5rem;
+  }
+  .about-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem;
+    align-items: center;
+  }
+  .about-photo {
+    aspect-ratio: 3/4; border-radius: 4px; overflow: hidden;
+    background: linear-gradient(135deg, var(--accent) 0%, #e07a5f 100%);
+    position: relative;
+  }
+  .about-photo::before {
+    content: '林'; position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Serif SC', serif; font-size: 12rem;
+    color: rgba(255,255,255,0.25);
+  }
+  .about h2 { font-size: 2.8rem; line-height: 1.1; margin-bottom: 1.5rem; }
+  .about p {
+    color: var(--ink-soft); margin-bottom: 1.2rem; font-size: 1rem;
+  }
+  .about-tags {
+    display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem;
+  }
+  .about-tags span {
+    padding: .5rem 1rem; border: 1px solid var(--line);
+    border-radius: 100px; font-size: .8rem; color: var(--ink-soft);
+    background: var(--card);
+  }
 
-        /* 滚动条 */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
+  /* NEWSLETTER */
+  .newsletter { text-align: center; padding: 7rem 2.5rem; }
+  .newsletter h2 { font-size: 3rem; margin-bottom: 1rem; }
+  .newsletter h2 span { color: var(--accent); font-style: italic; }
+  .newsletter p { color: var(--ink-soft); margin-bottom: 2.5rem; max-width: 500px; margin-inline: auto; }
+  .nl-form {
+    display: flex; max-width: 460px; margin: 0 auto;
+    border: 1px solid var(--line); border-radius: 100px;
+    padding: .4rem; background: var(--card);
+  }
+  .nl-form input {
+    flex: 1; background: transparent; border: none; outline: none;
+    padding: 0 1.4rem; color: var(--ink); font-family: inherit; font-size: .95rem;
+  }
+  .nl-form button {
+    background: var(--ink); color: var(--bg); border: none;
+    padding: .9rem 1.8rem; border-radius: 100px; cursor: pointer;
+    font-family: inherit; font-size: .9rem; transition: background .3s;
+  }
+  .nl-form button:hover { background: var(--accent); }
 
-        .gradient-text {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* FOOTER */
+  footer {
+    padding: 4rem 2.5rem 3rem; border-top: 1px solid var(--line);
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-top {
+    display: flex; justify-content: space-between;
+    padding-bottom: 3rem; flex-wrap: wrap; gap: 2rem;
+  }
+  .footer-top h3 { font-size: 1.5rem; margin-bottom: .5rem; }
+  .footer-top p { color: var(--ink-mute); font-size: .9rem; max-width: 320px; }
+  .socials { display: flex; gap: .8rem; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; padding-top: 2rem;
+    border-top: 1px solid var(--line); font-size: .8rem;
+    color: var(--ink-mute); flex-wrap: wrap; gap: 1rem;
+  }
 
-        /* 加载动画 */
-        .loader {
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 50;
-            animation: loading 2s infinite;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .loading .loader {
-            opacity: 1;
-        }
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
 
-        @keyframes loading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: rgba(0, 242, 255, 0.1);
-            color: var(--primary);
-            border: 1px solid rgba(0, 242, 255, 0.2);
-        }
-    </style>
+  /* RESPONSIVE */
+  @media (max-width: 860px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-menu { display: none; }
+    .hero { padding: 7rem 1.2rem 4rem; }
+    .hero-stats { gap: 2rem; flex-wrap: wrap; }
+    section { padding: 4rem 1.2rem; }
+    .featured { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.2rem; }
+    .featured h2 { font-size: 2.2rem; }
+    .posts { grid-template-columns: 1fr; gap: 2rem; }
+    .about { padding: 5rem 1.2rem; }
+    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .sec-head { flex-direction: column; align-items: flex-start; }
+    .search-box { min-width: unset; width: 100%; }
+    .scroll-hint { display: none; }
+    .newsletter h2 { font-size: 2rem; }
+    .nl-form { flex-direction: column; border-radius: 16px; padding: .5rem; }
+    .nl-form input { padding: 1rem; }
+  }
+</style>
 </head>
-<body class="antialiased selection:bg-cyan-500 selection:text-black">
+<body>
 
-    <!-- 动态背景 -->
-    <div class="cyber-grid"></div>
-    <div class="fixed inset-0 bg-gradient-to-b from-transparent via-[#0a0a0f]/80 to-[#0a0a0f] pointer-events-none z-[-1]"></div>
-    
-    <!-- 顶部加载条 -->
-    <div id="loader" class="loader"></div>
+<nav id="nav">
+  <div class="logo">
+    <span class="logo-dot"></span>
+    <span>林予白 · 手记</span>
+  </div>
+  <div class="nav-menu">
+    <a href="#featured">精选</a>
+    <a href="#posts">文章</a>
+    <a href="#about">关于</a>
+    <a href="#contact">联系</a>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+    </button>
+  </div>
+</nav>
 
-    <!-- 导航栏 -->
-    <nav class="fixed w-full z-40 top-0 start-0 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse group">
-                <div class="w-8 h-8 rounded bg-gradient-to-tr from-cyan-400 to-purple-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(0,242,255,0.5)] group-hover:shadow-[0_0_25px_rgba(0,242,255,0.8)] transition-all">N</div>
-                <span class="self-center text-2xl font-semibold whitespace-nowrap tracking-tighter glow-text">NEXUS</span>
-            </a>
-            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                <button type="button" class="text-white bg-white/5 hover:bg-white/10 focus:ring-4 focus:outline-none focus:ring-cyan-300/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center border border-white/10 transition-all hover:border-cyan-400/50">订阅更新</button>
-            </div>
-            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                    <li>
-                        <a href="#" class="block py-2 px-3 text-cyan-400 rounded md:bg-transparent md:p-0" aria-current="page">首页</a>
-                    </li>
-                    <li>
-                        <a href="#articles" class="block py-2 px-3 text-gray-300 rounded hover:text-cyan-400 md:p-0 transition-colors">文章</a>
-                    </li>
-                    <li>
-                        <a href="#projects" class="block py-2 px-3 text-gray-300 rounded hover:text-cyan-400 md:p-0 transition-colors">项目</a>
-                    </li>
-                    <li>
-                        <a href="#about" class="block py-2 px-3 text-gray-300 rounded hover:text-cyan-400 md:p-0 transition-colors">关于</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<header class="hero">
+  <div class="hero-tag">设计 · 写作 · 生活</div>
+  <h1>用文字与图像<br/>记录日常的 <em>微光</em></h1>
+  <p>一位独立设计师与写作者的数字花园。在这里,我记录关于创作、城市与日常的观察,也分享那些在咖啡馆和窗边被悄悄写下的思考。</p>
+  <div class="hero-stats">
+    <div>
+      <span class="stat-num">128</span>
+      <span class="stat-label">篇文章</span>
+    </div>
+    <div>
+      <span class="stat-num">4 年</span>
+      <span class="stat-label">持续写作</span>
+    </div>
+    <div>
+      <span class="stat-num">24k</span>
+      <span class="stat-label">读者</span>
+    </div>
+  </div>
+  <div class="scroll-hint">向下滚动</div>
+</header>
 
-    <!-- 主要内容区域 -->
-    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
-        
-        <!-- Hero Section -->
-        <section class="mb-24 relative">
-            <div class="absolute -top-20 -left-20 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px]"></div>
-            <div class="absolute top-20 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-            
-            <div class="relative z-10 max-w-4xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-mono mb-6 animate-pulse">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                    SYSTEM ONLINE v2.0.4
-                </div>
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                    探索代码与<br>
-                    <span class="gradient-text">数字未来的边界</span>
-                </h1>
-                <p class="text-xl text-gray-400 mb-8 max-w-2xl leading-relaxed">
-                    欢迎来到我的数字空间。这里记录着关于前端开发、人工智能以及未来科技的思考与实践。让我们一起构建下一代互联网体验。
-                </p>
-                <div class="flex gap-4">
-                    <a href="#articles" class="px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded transition-all shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)]">
-                        开始阅读
-                    </a>
-                    <a href="#projects" class="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30 rounded transition-all">
-                        查看项目
-                    </a>
-                </div>
-            </div>
-        </section>
+<section id="featured" class="featured reveal">
+  <div class="featured-img">
+    <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/181db4897-78ef-4f84-9115-695c3070fb2f.png" alt="featured" />
+  </div>
+  <div>
+    <span class="featured-badge">✦ 本期精选</span>
+    <h2>关于设计的<br/>一些诚实思考</h2>
+    <div class="featured-meta">
+      <span>2026 年 5 月 28 日</span>
+      <span>·</span>
+      <span>阅读 8 分钟</span>
+    </div>
+    <p class="featured-desc">在追求极简的第十年,我开始怀疑"少即是多"是否仍然是答案。这篇文章记录了我与设计之间一段漫长而温柔的对话,关于留白、关于克制,也关于那些被保留下来的温度。</p>
+    <a href="#" class="read-more">阅读全文 →</a>
+  </div>
+</section>
 
-        <!-- 统计卡片 -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-            <div class="card-hover p-6 rounded-xl">
-                <div class="text-gray-400 text-sm mb-2 font-mono">POSTS_PUBLISHED</div>
-                <div class="text-3xl font-bold text-white">42</div>
-                <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-                    <div class="bg-cyan-500 h-full w-[75%]"></div>
-                </div>
-            </div>
-            <div class="card-hover p-6 rounded-xl">
-                <div class="text-gray-400 text-sm mb-2 font-mono">PROJECTS_COMPLETED</div>
-                <div class="text-3xl font-bold text-white">18</div>
-                <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-                    <div class="bg-purple-500 h-full w-[60%]"></div>
-                </div>
-            </div>
-            <div class="card-hover p-6 rounded-xl">
-                <div class="text-gray-400 text-sm mb-2 font-mono">COFFEE_CONSUMED</div>
-                <div class="text-3xl font-bold text-white">∞</div>
-                <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-                    <div class="bg-pink-500 h-full w-[95%]"></div>
-                </div>
-            </div>
-        </section>
+<section id="posts">
+  <div class="sec-head reveal">
+    <div>
+      <div class="sec-sub">最近的记录</div>
+      <h2 class="sec-title">新近 <span>文章</span></h2>
+    </div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="搜索文章..." />
+    </div>
+  </div>
+  <div class="posts" id="postsGrid">
+    <article class="post reveal" data-cat="旅行" data-title="春日东京漫步:樱花与街角">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/1df4dfc1d-fff0-4c4e-aa4d-6ec19d4f1b16.png" alt="" />
+      </div>
+      <div class="post-cat">旅行</div>
+      <h3>春日东京漫步:樱花与街角</h3>
+      <div class="post-meta">
+        <span>5 月 22 日</span><span>·</span><span>6 分钟</span>
+      </div>
+    </article>
 
-        <!-- 最新文章列表 -->
-        <section id="articles" class="mb-24">
-            <div class="flex items-center justify-between mb-10">
-                <h2 class="text-3xl font-bold flex items-center gap-3">
-                    <span class="w-1 h-8 bg-cyan-500 rounded-full"></span>
-                    最新文章
-                </h2>
-                <a href="#" class="text-cyan-400 hover:text-cyan-300 text-sm font-mono flex items-center gap-1 group">
-                    VIEW_ALL_ARCHIVE 
-                    <span class="group-hover:translate-x-1 transition-transform">→</span>
-                </a>
-            </div>
+    <article class="post reveal" data-cat="随笔" data-title="咖啡馆里的代码与闲想">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/19c4ecede-a958-4b16-add9-cdc2bf650d3d.png" alt="" />
+      </div>
+      <div class="post-cat">随笔</div>
+      <h3>咖啡馆里的代码与闲想</h3>
+      <div class="post-meta">
+        <span>5 月 15 日</span><span>·</span><span>5 分钟</span>
+      </div>
+    </article>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-container">
-                <!-- 文章卡片将通过JS生成，或者静态写在这里 -->
-                
-                <!-- Card 1 -->
-                <article class="card-hover rounded-xl overflow-hidden group cursor-pointer flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] to-transparent z-10 opacity-60"></div>
-                        <img src="" alt="Blog Post 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 post-img-1">
-                        <div class="absolute top-4 right-4 z-20 tag">Frontend</div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="text-xs text-gray-500 font-mono mb-3 flex items-center gap-2">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            2023.10.24
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 group-hover:text-cyan-400 transition-colors">WebGL 渲染管线深度解析</h3>
-                        <p class="text-gray-400 text-sm line-clamp-3 mb-4 flex-1">深入探讨现代浏览器中的图形渲染技术，从顶点着色器到片段着色器的完整流程分析...</p>
-                        <div class="flex items-center text-cyan-500 text-sm font-medium mt-auto">
-                            READ_MORE <span class="ml-1">_</span>
-                        </div>
-                    </div>
-                </article>
+    <article class="post reveal" data-cat="生活" data-title="极简生活的七个微小习惯">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/11cdd60eb-8aad-4c0f-93e2-eb1321449725.png" alt="" />
+      </div>
+      <div class="post-cat">生活</div>
+      <h3>极简生活的七个微小习惯</h3>
+      <div class="post-meta">
+        <span>5 月 8 日</span><span>·</span><span>7 分钟</span>
+      </div>
+    </article>
 
-                <!-- Card 2 -->
-                <article class="card-hover rounded-xl overflow-hidden group cursor-pointer flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] to-transparent z-10 opacity-60"></div>
-                        <img src="" alt="Blog Post 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 post-img-2">
-                        <div class="absolute top-4 right-4 z-20 tag bg-purple-500/10 text-purple-400 border-purple-500/20">AI</div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="text-xs text-gray-500 font-mono mb-3 flex items-center gap-2">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            2023.11.02
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 group-hover:text-purple-400 transition-colors">神经网络在前端的应用</h3>
-                        <p class="text-gray-400 text-sm line-clamp-3 mb-4 flex-1">利用 TensorFlow.js 在浏览器端运行机器学习模型，实现实时图像识别与交互体验...</p>
-                        <div class="flex items-center text-purple-500 text-sm font-medium mt-auto">
-                            READ_MORE <span class="ml-1">_</span>
-                        </div>
-                    </div>
-                </article>
+    <article class="post reveal" data-cat="设计" data-title="排版中的呼吸感">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/181db4897-78ef-4f84-9115-695c3070fb2f.png" alt="" />
+      </div>
+      <div class="post-cat">设计</div>
+      <h3>排版中的呼吸感</h3>
+      <div class="post-meta">
+        <span>4 月 30 日</span><span>·</span><span>9 分钟</span>
+      </div>
+    </article>
 
-                <!-- Card 3 -->
-                <article class="card-hover rounded-xl overflow-hidden group cursor-pointer flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] to-transparent z-10 opacity-60"></div>
-                        <img src="" alt="Blog Post 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 post-img-3">
-                        <div class="absolute top-4 right-4 z-20 tag bg-pink-500/10 text-pink-400 border-pink-500/20">Design</div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="text-xs text-gray-500 font-mono mb-3 flex items-center gap-2">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            2023.11.15
-                        </div>
-                        <h3 class="text-xl font-bold mb-3 group-hover:text-pink-400 transition-colors">赛博朋克美学设计指南</h3>
-                        <p class="text-gray-400 text-sm line-clamp-3 mb-4 flex-1">如何运用霓虹色、故障艺术和高对比度排版打造极具未来感的用户界面...</p>
-                        <div class="flex items-center text-pink-500 text-sm font-medium mt-auto">
-                            READ_MORE <span class="ml-1">_</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
+    <article class="post reveal" data-cat="阅读" data-title="重读村上春树的午后">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/19c4ecede-a958-4b16-add9-cdc2bf650d3d.png" alt="" />
+      </div>
+      <div class="post-cat">阅读</div>
+      <h3>重读村上春树的午后</h3>
+      <div class="post-meta">
+        <span>4 月 21 日</span><span>·</span><span>4 分钟</span>
+      </div>
+    </article>
 
-        <!-- 项目展示 -->
-        <section id="projects" class="mb-24">
-            <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
-                <span class="w-1 h-8 bg-purple-500 rounded-full"></span>
-                开源项目
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Project 1 -->
-                <div class="card-hover p-8 rounded-xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2 text-white group-hover:text-cyan-400 transition-colors">CyberUI Kit</h3>
-                    <p class="text-gray-400 mb-6">一套基于 Tailwind CSS 的赛博朋克风格 UI 组件库，包含按钮、卡片、表单等常用组件。</p>
-                    <div class="flex gap-3 mb-6">
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">Vue 3</span>
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">Tailwind</span>
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">TypeScript</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-yellow-400"></div> 1.2k Stars</span>
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-blue-400"></div> MIT License</span>
-                    </div>
-                </div>
+    <article class="post reveal" data-cat="摄影" data-title="胶片相机与慢下来的城市">
+      <div class="post-img">
+        <img src="https://image.qwenlm.ai/public_source/b687603e-ca1f-48f6-89b8-e8724e7c24f9/1df4dfc1d-fff0-4c4e-aa4d-6ec19d4f1b16.png" alt="" />
+      </div>
+      <div class="post-cat">摄影</div>
+      <h3>胶片相机与慢下来的城市</h3>
+      <div class="post-meta">
+        <span>4 月 12 日</span><span>·</span><span>6 分钟</span>
+      </div>
+    </article>
+  </div>
+</section>
 
-                <!-- Project 2 -->
-                <div class="card-hover p-8 rounded-xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2 text-white group-hover:text-purple-400 transition-colors">NeuralVis</h3>
-                    <p class="text-gray-400 mb-6">基于 WebGL 的神经网络可视化工具，支持实时数据流处理和 3D 节点关系图展示。</p>
-                    <div class="flex gap-3 mb-6">
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">React</span>
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">Three.js</span>
-                        <span class="text-xs font-mono px-2 py-1 rounded bg-white/5 text-gray-300">Python</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-yellow-400"></div> 856 Stars</span>
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-blue-400"></div> Apache 2.0</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+<section id="about" class="about">
+  <div class="about-inner reveal">
+    <div class="about-photo"></div>
+    <div>
+      <div class="sec-sub" style="margin-bottom: 1rem;">关于我</div>
+      <h2>你好,我是<br/>林予白。</h2>
+      <p>独立设计师,业余写作者,长期居住在上海。喜欢安静的早晨、手冲咖啡,以及一切能让时间变慢下来的事物。</p>
+      <p>这个博客是我留给自己的数字抽屉。我不追求流量,只希望每一篇文章都能诚实地记录当下的心情与思考。如果你偶然路过,欢迎坐下喝一杯茶。</p>
+      <div class="about-tags">
+        <span>UI 设计</span>
+        <span>品牌视觉</span>
+        <span>写作</span>
+        <span>胶片摄影</span>
+        <span>手冲咖啡</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <!-- Newsletter -->
-        <section class="relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 p-8 md:p-12 text-center mb-24">
-            <div class="relative z-10 max-w-2xl mx-auto">
-                <h2 class="text-3xl font-bold mb-4">加入极客通讯</h2>
-                <p class="text-gray-400 mb-8">每周获取最新的技术文章、教程和资源，直接发送到您的收件箱。无垃圾邮件承诺。</p>
-                <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault(); alert('感谢订阅！');">
-                    <input type="email" placeholder="your@email.com" class="flex-1 bg-black/50 border border-white/20 rounded-lg px-6 py-3 text-white focus:outline-none focus:border-cyan-400 transition-colors" required>
-                    <button type="submit" class="bg-white text-black font-bold px-8 py-3 rounded-lg hover:bg-cyan-400 transition-colors">
-                        SUBSCRIBE
-                    </button>
-                </form>
-            </div>
-        </section>
+<section id="contact" class="newsletter reveal">
+  <h2>订阅我的 <span>手记</span></h2>
+  <p>每月一封,没有推销,只有最近写下的几篇文字和一段想和你说的话。</p>
+  <form class="nl-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='已订阅 ✓'; this.querySelector('button').style.background='var(--accent)'">
+    <input type="email" placeholder="你的邮箱地址" required />
+    <button type="submit">订阅</button>
+  </form>
+</section>
 
-    </main>
+<footer>
+  <div class="footer-top">
+    <div>
+      <h3 class="serif">林予白 · 手记</h3>
+      <p>记录日常的微光。一个关于设计、写作与生活的个人博客。</p>
+    </div>
+    <div class="socials">
+      <a href="#" class="icon-btn" aria-label="twitter">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" class="icon-btn" aria-label="instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg>
+      </a>
+      <a href="#" class="icon-btn" aria-label="github">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      <a href="#" class="icon-btn" aria-label="email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 林予白 · 用心书写</span>
+    <span>上海 · 中国</span>
+  </div>
+</footer>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/10 bg-[#050508] pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 rounded bg-gradient-to-tr from-cyan-400 to-purple-600 flex items-center justify-center font-bold text-xs text-white">N</div>
-                        <span class="text-xl font-bold tracking-tighter">NEXUS</span>
-                    </div>
-                    <p class="text-gray-500 text-sm leading-relaxed max-w-sm">
-                        致力于探索前沿 Web 技术与数字艺术。在这里，代码不仅仅是工具，更是表达创意的媒介。
-                    </p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4">导航</h4>
-                    <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">首页</a></li>
-                        <li><a href="#articles" class="hover:text-cyan-400 transition-colors">文章归档</a></li>
-                        <li><a href="#projects" class="hover:text-cyan-400 transition-colors">开源项目</a></li>
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">友情链接</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4">社交</h4>
-                    <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">GitHub</a></li>
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Twitter / X</a></li>
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">掘金</a></li>
-                        <li><a href="#" class="hover:text-cyan-400 transition-colors">Email Me</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
-                <p>&copy; 2023 NEXUS Blog. All rights reserved.</p>
-                <p class="mt-2 md:mt-0 font-mono">DESIGNED WITH <span class="text-red-500">♥</span> & CODE</p>
-            </div>
-        </div>
-    </footer>
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
 
-    <script>
-        // 模拟图片生成 (由于无法直接调用外部API生成真实图片URL用于img标签src，这里使用Canvas绘制占位图或使用纯色块+文字模拟科技感图片)
-        // 在实际项目中，你会替换这些src为真实的图片URL
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const loader = document.getElementById('loader');
-            
-            // 模拟页面加载
-            document.body.classList.add('loading');
-            setTimeout(() => {
-                document.body.classList.remove('loading');
-            }, 1500);
+  // Theme toggle
+  const themeBtn = document.getElementById('themeBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  const moonSVG = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+  const sunSVG = `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>`;
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      themeIcon.innerHTML = sunSVG;
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeIcon.innerHTML = moonSVG;
+    }
+  });
 
-            // 生成科技感占位图
-            const generatePlaceholder = (element, color, text) => {
-                const canvas = document.createElement('canvas');
-                canvas.width = 600;
-                canvas.height = 400;
-                const ctx = canvas.getContext('2d');
-                
-                // 背景
-                const gradient = ctx.createLinearGradient(0, 0, 600, 400);
-                gradient.addColorStop(0, '#1a1a2e');
-                gradient.addColorStop(1, '#16213e');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 600, 400);
-                
-                // 装饰线条
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(0, 350);
-                ctx.lineTo(600, 350);
-                ctx.stroke();
-                
-                ctx.beginPath();
-                ctx.arc(550, 50, 30, 0, Math.PI * 2);
-                ctx.fillStyle = color + '33'; // 透明度
-                ctx.fill();
-                
-                // 文字
-                ctx.font = 'bold 40px Inter, sans-serif';
-                ctx.fillStyle = 'white';
-                ctx.textAlign = 'center';
-                ctx.fillText(text, 300, 200);
-                
-                // 噪点效果
-                for(let i=0; i<500; i++) {
-                    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.1})`;
-                    ctx.fillRect(Math.random()*600, Math.random()*400, 2, 2);
-                }
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in', 'show');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    if (el.classList.contains('post')) el.style.transitionDelay = (i % 3) * 0.1 + 's';
+    io.observe(el);
+  });
 
-                element.src = canvas.toDataURL();
-            };
-
-            const img1 = document.querySelector('.post-img-1');
-            const img2 = document.querySelector('.post-img-2');
-            const img3 = document.querySelector('.post-img-3');
-
-            if(img1) generatePlaceholder(img1, '#00f2ff', 'WEBGL');
-            if(img2) generatePlaceholder(img2, '#7000ff', 'NEURAL');
-            if(img3) generatePlaceholder(img3, '#ff0055', 'CYBER');
-
-            // 简单的滚动显现动画
-            const observerOptions = {
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('section').forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(20px)';
-                section.style.transition = 'all 0.6s ease-out';
-                observer.observe(section);
-            });
-        });
-    </script>
+  // Search
+  const searchInput = document.getElementById('searchInput');
+  const posts = document.querySelectorAll('.post');
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    posts.forEach(p => {
+      const title = (p.dataset.title + ' ' + p.dataset.cat).toLowerCase();
+      p.style.display = !q || title.includes(q) ? '' : 'none';
+    });
+  });
+</script>
 </body>
 </html>
 ```
